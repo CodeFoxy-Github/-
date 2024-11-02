@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>匿名聊天?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    #chat-container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 18%;
+      padding: 10px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<div id="chat-container">
+  <input type="text" id="messageInput" placeholder="打字!" />
+  <button onclick="sendMessage()">發送!</button>
+</div>
+
+<script>
+  function sendMessage() {
+    const message = document.getElementById('messageInput').value;
+
+    if (message.trim() === "") {
+      alert("阿不是打字阿");
+      return;
+    }
+
+    const url = "https://chat.googleapis.com/v1/spaces/AAAAECv0ZWc/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=l3yZlsP10QhYP_EPoVZQAtyGDC2AT-y1VMNfzU6x-3U";
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: JSON.stringify({ text: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Message sent:', data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
+     document.getElementById('messageInput').value = "";
+  }
+</script>
+
+</body>
+</html>
