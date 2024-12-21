@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:9080/ -->
+<html lang="zh-Hant"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>馬達控制</title>
+    <style>
+         :root {
+            --md-sys-color-primary: #006494;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-primary-container: #cbe6ff;
+            --md-sys-color-on-primary-container: #001e30;
+            --md-sys-color-secondary: #50606e;
+            --md-sys-color-on-secondary: #ffffff;
+            --md-sys-color-secondary-container: #d3e5f5;
+            --md-sys-color-on-secondary-container: #0c1d29;
+            --md-sys-color-surface: #fdfcff;
+            --md-sys-color-on-surface: #1a1c1e;
+            --md-sys-color-outline: #72787e;
+            --md-elevation-level1: 0px 1px 2px rgba(0,0,0,0.3);
+            --md-elevation-level2: 0px 2px 4px rgba(0,0,0,0.3);
+            --md-elevation-level3: 0px 4px 8px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--md-sys-color-surface);
+            border-radius: 28px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: var(--md-elevation-level1);
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: var(--md-elevation-level2);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--md-sys-color-on-surface);
+            text-align: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .control-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 8px;
+        }
+
+        .button {
+            border: none;
+            border-radius: 20px;
+            padding: 16px 24px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            min-width: 120px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .button:hover {
+            box-shadow: var(--md-elevation-level2);
+            opacity: 0.9;
+        }
+
+        .button:active {
+            box-shadow: var(--md-elevation-level1);
+            transform: translateY(1px);
+        }
+
+        .button.round {
+            border-radius: 50%;
+            width: 96px;
+            height: 96px;
+            padding: 0;
+            font-size: 2rem;
+        }
+
+        .button.secondary {
+            background: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 16px;
+            color: var(--md-sys-color-outline);
+            min-height: 24px;
+            transition: opacity 0.3s;
+        }
+
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple::after {
+            content: "";
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --md-sys-color-surface: #1a1c1e;
+                --md-sys-color-on-surface: #e2e2e6;
+                --md-sys-color-primary: #8fcdff;
+                --md-sys-color-on-primary: #003351;
+                --md-sys-color-primary-container: #004b73;
+                --md-sys-color-on-primary-container: #cbe6ff;
+                --md-sys-color-secondary: #b7c9d9;
+                --md-sys-color-on-secondary: #22323f;
+                --md-sys-color-secondary-container: #394956;
+                --md-sys-color-on-secondary-container: #d3e5f5;
+                --md-sys-color-outline: #8b9198;
+            }
+        }
+    </style>
+<style type="text/css">.fc-ab-root { display: none !important } body > div.fc-ab-root { display: none !important } .fbs-auth__container.fbs-auth__adblock { display: none !important } .overlay-34_Kj { display: none !important } .wrapper-3AzfF { display: none !important } .fEy1Z2XT { display: none !important } .nytc---modal-window---windowContainer.nytc---modal-window---isShown.nytc---shared---blackBG { display: none !important } .tp-modal { display: none !important } .tp-backdrop.tp-active { display: none !important } .c-nudge__container.c-gate__container { display: none !important } .c-nudge__container.c-regGate__container { display: none !important } .css-n7r8pg { display: none !important } .css-1bd8bfl { display: none !important } .overlay__59af11e2 { display: none !important } .tp_modal { display: none !important } .tp-backdrop.tp-active { display: none !important } div[class^='sp_message_container'] { display: none !important } div[class^='sp_veil'] { display: none !important } </style></head>
+<body>
+    <div class="container">
+        <h1>馬達控制</h1>
+        
+        <div class="card">
+            <div class="control-group">
+                <div class="control-title">步進馬達控制</div>
+                <button class="button round ripple" onmousedown="startStepper(50)" ontouchstart="startStepper(50)" onmouseup="stopStepper()" ontouchend="stopStepper()" onmouseleave="stopStepper()">
+                    ↑
+                </button>
+                <button class="button round ripple" onmousedown="startStepper(-50)" ontouchstart="startStepper(-50)" onmouseup="stopStepper()" ontouchend="stopStepper()" onmouseleave="stopStepper()">
+                    ↓
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="control-group">
+                <div class="control-title">抓取器控制</div>
+                <button class="button secondary ripple" onclick="toggleGripper()" id="gripperBtn">釋放</button>
+            </div>
+        </div>
+
+        <div class="status" id="status" style="color: rgb(239, 68, 68); opacity: 1;"></div>
+    </div>
+
+    <script>
+        let isGrabbing = false;
+        let isStepping = false;
+        let stepDirection = 0;
+        let statusTimeout;
+
+        function showStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.style.color = isError ? '#ef4444' : 'var(--md-sys-color-outline)';
+            clearTimeout(statusTimeout);
+            statusTimeout = setTimeout(() => {
+                status.style.opacity = '0';
+                setTimeout(() => {
+                    status.textContent = '';
+                    status.style.opacity = '1';
+                }, 300);
+            }, 2000);
+        }
+
+        async function sendCommand(type, value) {
+            try {
+                const response = await fetch('/control', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        [type]: value
+                    })
+                });
+                
+                if (!response.ok) throw new Error('命令發送失敗');
+                showStatus('命令發送成功');
+            } catch (error) {
+                showStatus('錯誤: ' + error.message, true);
+            }
+        }
+
+        function startStepper(value) {
+            isStepping = true;
+            stepDirection = value;
+            sendCommand('stepper', stepDirection);
+        }
+
+        function stopStepper() {
+            isStepping = false;
+            sendCommand('stepper', 0);  // 停止馬達
+        }
+
+        function toggleGripper() {
+            isGrabbing = !isGrabbing;
+            const btn = document.getElementById('gripperBtn');
+            btn.textContent = isGrabbing ? '釋放' : '抓取';
+            btn.classList.add('active');
+            setTimeout(() => btn.classList.remove('active'), 200);
+            sendCommand('servo', isGrabbing ? 180 : 0);
+        }
+
+        // 增加按鈕波紋效果
+        document.querySelectorAll('.ripple').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const x = e.clientX - e.target.offsetLeft;
+                const y = e.clientY - e.target.offsetTop;
+                
+                const ripple = document.createElement('span');
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    </script>
+
+
+
+
+</body></html>
